@@ -1,8 +1,23 @@
 # Airnet ✈️
 
+<p align="center">
+  <img src="./assets/airnet-poster.svg" alt="Airnet promotional poster" width="100%" />
+</p>
+
 > **Realtime rooms, chat and voice-ready communication.**
 
 Airnet is a production-oriented realtime communication MVP built with FastAPI, SQLAlchemy, Neon PostgreSQL, Vite and native WebSockets.
+
+## 🚀 Highlights
+
+- 💬 Realtime room chat over WebSockets
+- 🎙️ WebRTC signaling for voice/video calling
+- 👥 Room creation, joining and membership
+- 🟢 Presence event broadcasting
+- 🔐 JWT access + refresh authentication
+- 🔒 bcrypt password hashing
+- 🗄️ Neon PostgreSQL + SQLAlchemy 2 async
+- ⚡ Vite + vanilla JavaScript/CSS responsive UI
 
 ## ✅ Implemented
 
@@ -30,6 +45,8 @@ Airnet is a production-oriented realtime communication MVP built with FastAPI, S
 
 ```text
 Airnet/
+├── assets/
+│   └── airnet-poster.svg
 ├── backend/
 │   ├── app/
 │   │   ├── __init__.py
