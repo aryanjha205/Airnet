@@ -1,273 +1,106 @@
 # Airnet ✈️
 
-> **A real-time voice & chat platform for connecting people instantly.**
+> **Realtime rooms, chat and voice-ready communication.**
 
-Airnet is a modern realtime communication app inspired by the simplicity of Airtalk. The project is designed around fast room-based communication, live presence, text chat, and a path toward peer-to-peer voice calling.
+Airnet is a production-oriented realtime communication MVP built with FastAPI, SQLAlchemy, Neon PostgreSQL, Vite and native WebSockets.
 
-## 🚀 Highlights
+## ✅ Implemented
 
-- 💬 **Realtime chat** with WebSocket-based room communication
-- 🎙️ **Voice calling roadmap** powered by WebRTC
-- 👥 **Rooms & membership** for private or shared conversations
-- 🟢 **Live presence** for online, away, and in-call states
-- 🔐 **JWT authentication** with access and refresh tokens
-- ⚡ **FastAPI backend** with async APIs and native WebSocket support
-- 🗄️ **Neon PostgreSQL** for serverless relational storage
-- 🎨 **Vite frontend** with lightweight CSS and a mobile-friendly design
-- 📦 **Deployment-ready architecture** for Vercel/Netlify + Railway/Fly.io/Render
+- JWT access + refresh authentication
+- Secure bcrypt password hashing
+- User profile endpoint
+- Room creation, listing, joining and leaving
+- Persistent message history with pagination
+- Realtime room chat over WebSockets
+- Presence event broadcasting
+- WebRTC signaling endpoint for offer/answer/ICE payloads
+- Responsive dark UI built with Vite + vanilla JavaScript/CSS
+- PostgreSQL migration SQL and environment templates
+- Automatic development-table initialization for the API
 
-## 🧱 Tech Stack
+## Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Vite + Vanilla JavaScript + CSS |
-| Backend | Python + FastAPI |
-| Database | Neon PostgreSQL |
-| ORM | SQLAlchemy 2.0 (async) |
-| Migrations | Alembic |
-| Authentication | JWT + bcrypt |
-| Realtime | FastAPI WebSockets |
-| Voice | WebRTC + WebSocket signaling |
-| Frontend Hosting | Vercel / Netlify |
-| Backend Hosting | Railway / Fly.io / Render |
+**Frontend:** Vite + Vanilla JavaScript + CSS  
+**Backend:** Python + FastAPI + SQLAlchemy 2 async  
+**Database:** Neon PostgreSQL  
+**Realtime:** WebSockets  
+**Voice:** WebRTC signaling (`/ws/signal/{room_id}`)
 
-## 🏗️ Architecture
+## Structure
 
 ```text
-┌───────────────────────┐
-│       Vite Client     │
-│  UI • Chat • Presence │
-└──────────┬────────────┘
-           │ HTTPS / WebSocket
-           ▼
-┌───────────────────────┐
-│      FastAPI API      │
-│ Auth • Rooms • Chat   │
-│ Presence • Signaling  │
-└──────────┬────────────┘
-           │ Async SQL
-           ▼
-┌───────────────────────┐
-│   Neon PostgreSQL     │
-│ Users • Rooms • Msgs  │
-│ Members • Presence    │
-└───────────────────────┘
-
-        WebRTC (planned)
-   Peer-to-peer voice audio
-```
-
-## 📁 Project Structure
-
-```text
-airnet/
+Airnet/
 ├── backend/
 │   ├── app/
-│   │   ├── main.py
+│   │   ├── __init__.py
+│   │   ├── auth.py
 │   │   ├── config.py
 │   │   ├── database.py
-│   │   ├── models/
-│   │   ├── schemas/
-│   │   ├── routers/
-│   │   ├── services/
-│   │   ├── auth/
-│   │   └── utils/
-│   ├── alembic/
-│   ├── requirements.txt
-│   └── .env
-│
+│   │   ├── main.py
+│   │   └── models.py
+│   ├── alembic/001_initial.sql
+│   ├── .env.example
+│   └── requirements.txt
 ├── frontend/
+│   ├── src/main.js
+│   ├── src/style.css
+│   ├── .env.example
 │   ├── index.html
-│   ├── vite.config.js
-│   ├── src/
-│   │   ├── main.js
-│   │   ├── api/
-│   │   ├── ws/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   └── styles/
 │   └── package.json
-│
 ├── implementation.md
 └── README.md
 ```
 
-## 🔌 API Overview
+## Run locally
 
-### REST
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| `POST` | `/auth/register` | Create an account |
-| `POST` | `/auth/login` | Get JWT tokens |
-| `POST` | `/auth/refresh` | Refresh an access token |
-| `GET` | `/users/me` | Get the current user |
-| `GET` | `/rooms` | List rooms |
-| `POST` | `/rooms` | Create a room |
-| `POST` | `/rooms/{id}/join` | Join a room |
-| `GET` | `/rooms/{id}/messages` | Get message history |
-| `DELETE` | `/rooms/{id}/leave` | Leave a room |
-
-### WebSocket
-
-```text
-/ws/rooms/{room_id}
-```
-
-Realtime chat and presence events are exchanged through room connections.
-
-For future voice support:
-
-```text
-/ws/signal/{room_id}
-```
-
-This endpoint is intended for WebRTC offer/answer and ICE candidate signaling.
-
-## 🗃️ Core Data Model
-
-Airnet is designed around these primary entities:
-
-- **Users** — accounts, usernames, emails, avatars
-- **Rooms** — conversation spaces, including private rooms
-- **Room Members** — membership and roles
-- **Messages** — persistent room chat history
-- **Presence** — live online / away / in-call state
-
-## 🛠️ Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/aryanjha205/Airnet.git
-cd Airnet
-```
-
-### 2. Backend setup
+### Backend
 
 ```bash
 cd backend
 python -m venv .venv
-```
-
-Activate the virtual environment:
-
-**Windows**
-
-```bash
-.venv\Scripts\activate
-```
-
-**macOS / Linux**
-
-```bash
-source .venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
+# Windows: .venv\\Scripts\\activate
+# macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-Create `backend/.env`:
-
-```env
-DATABASE_URL=postgresql+asyncpg://<user>:<pass>@<neon-host>/<db>?sslmode=require
-JWT_SECRET=change_me
-JWT_ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=7
-CORS_ORIGINS=http://localhost:5173
-```
-
-Start FastAPI:
-
-```bash
+copy .env.example .env  # Windows
+# cp .env.example .env  # macOS/Linux
 uvicorn app.main:app --reload
 ```
 
-### 3. Frontend setup
+Set `DATABASE_URL` in `.env` to your Neon PostgreSQL connection string and replace `JWT_SECRET` with a long random value.
 
-Open a second terminal:
+### Frontend
 
 ```bash
 cd frontend
 npm install
+copy .env.example .env  # Windows
+# cp .env.example .env  # macOS/Linux
 npm run dev
 ```
 
-Create `frontend/.env`:
+Open the Vite URL, create an account, create a room, and start chatting.
 
-```env
-VITE_API_URL=http://localhost:8000
-VITE_WS_URL=ws://localhost:8000
-```
+## API
 
-## 🧪 Development Roadmap
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/auth/register` | Register |
+| POST | `/auth/login` | Login |
+| POST | `/auth/refresh` | Refresh JWT |
+| GET | `/users/me` | Current user |
+| GET | `/rooms` | User rooms |
+| POST | `/rooms` | Create room |
+| POST | `/rooms/{id}/join` | Join room |
+| GET | `/rooms/{id}/messages` | Message history |
+| DELETE | `/rooms/{id}/leave` | Leave room |
+| GET | `/health` | Health check |
 
-### Phase 1 — Foundation
+WebSockets: `/ws/rooms/{room_id}` for chat/presence and `/ws/signal/{room_id}` for WebRTC signaling.
 
-- [ ] Neon database connection
-- [ ] FastAPI project setup
-- [ ] SQLAlchemy + Alembic
-- [ ] Authentication with JWT
-- [ ] Vite frontend shell
+## Security
 
-### Phase 2 — Realtime Chat
+Never commit `.env` or production credentials. For deployment use HTTPS/WSS, a strong JWT secret, strict CORS origins, rate limiting, and a managed/self-hosted TURN server for reliable WebRTC connectivity.
 
-- [ ] Room creation and membership
-- [ ] WebSocket room messaging
-- [ ] Message history pagination
-- [ ] Online/offline presence
+## License
 
-### Phase 3 — Voice
-
-- [ ] WebRTC signaling
-- [ ] Microphone permissions and audio streams
-- [ ] Mute / deafen controls
-- [ ] STUN/TURN configuration
-- [ ] Multi-user voice rooms
-
-### Phase 4 — Production Polish
-
-- [ ] Notifications and unread counts
-- [ ] User settings and avatars
-- [ ] Rate limiting and validation
-- [ ] Responsive mobile UI
-- [ ] Production deployment and monitoring
-
-## 🔐 Environment & Security
-
-Never commit real credentials or secrets to GitHub. Keep `.env` files local and configure production secrets through your hosting provider.
-
-Recommended production hardening includes secure JWT secrets, HTTPS/WSS, strict CORS configuration, rate limiting, input validation, and a managed STUN/TURN strategy for WebRTC.
-
-## 📖 Implementation Guide
-
-For the detailed architecture, database schema, endpoint design, project structure, dependencies, and phased build plan, see [`implementation.md`](./implementation.md).
-
-## 🌍 Deployment
-
-A typical deployment can use:
-
-```text
-Frontend  → Vercel / Netlify
-Backend   → Railway / Fly.io / Render
-Database  → Neon PostgreSQL
-Voice     → WebRTC + STUN/TURN
-```
-
-## 🤝 Contributing
-
-Contributions are welcome. Fork the repository, create a feature branch, make your changes, and open a pull request with a clear description of what changed.
-
-## 📄 License
-
-Add the project's chosen license here before distributing Airnet publicly.
-
----
-
-<p align="center">
-  Built with ⚡ Python, FastAPI, Vite, WebSockets & Neon
-</p>
+Add the project's chosen license before public distribution.
